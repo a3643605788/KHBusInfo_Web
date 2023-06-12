@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>公車進站資訊</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/css/layui.css">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+  </head>
+  <body>
+    <div style=" background-color: #33ABA1;">
+        <span style="color: #FFFFFF; margin-left: 10px; font-size: 17px;">
+            {% if html_status == 0 %}
+                <a href="/btn_signup" style="color: #FFFFFF;">註冊</a>
+                <a href="/btn_login" style="color: #FFFFFF;">登入</a>
+            {% else %}
+                {{ html_nickname }}
+                <a href="/signout" style="color: #FFFFFF;">登出</a>
+                <a href="/myfavorite" style="color: #FFFFFF;">我的最愛</a>
+            {% endif %}
+        </span>
+    </div>
+    <div style="width: 1500px;height: 500px;margin: 20px auto">
+        <form class="layui-form" action="/search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公車名稱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="BusName" lay-verify="title" autocomplete="off" placeholder="請輸入公車名稱" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">搜尋</button>
+                </div>
+            </div>
+        </form>
+        <ul class="layui-tab-title">
+        <li>{{ html_DestinationZh }}</li>
+        <li>{{ html_DepartureZh }}</li>
+        </ul>
+        <div class="layui-tab-content" style="padding-bottom: 60px;">
+            <div class="layui-tab-item layui-show">
+                <table class="layui-table">
+                    <colgroup>
+                    <col width="500">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                        <th lay-data="{field:'ComeTime'}">到站時間</th>
+                        <th lay-data="{field:'IVRNO'}">站牌代碼</th>
+                        <th lay-data="{field:'StopName'}">公車站名</th>
+                        </tr> 
+                    </thead>
+                    <!-- 去程:按照到站時間分顏色，小於4分鐘顯示即將進站 -->
+                    {% for bus_timetable in html_bus_timetable %}
+                        {% if bus_timetable.GoBack == 1 %}
+                            <tbody>
+                                {% if bus_timetable.drive == "末班離駛" %}
+                                <tr>
+                                    <td>末班離駛</td>
+                                    <td>{{ bus_timetable.IVRNO }}</td>
+                                    <td>{{ bus_timetable.StopName }}</td>
+                                </tr>
+                                {% elif bus_timetable.drive >= 20%}
+                                <tr>
+                                    <td class="layui-bg-cyan">{{ bus_timetable.ComeTime }}</td>
+                                    <td>{{ bus_timetable.IVRNO }}</td>
+                                    <td>{{ bus_timetable.StopName }}</td>
+                                </tr>
+                                {% elif bus_timetable.drive >= 15 %}
+                                <tr>
+                                    <td class="layui-bg-green">{{ bus_timetable.drive }} 分</td>
+                                    <td>{{ bus_timetable.IVRNO }}</td>
+                                    <td>{{ bus_timetable.StopName }}</td>
+                                </tr>
+                                {% elif bus_timetable.drive >= 5 %}
+                                <tr>
+                                    <td class="layui-bg-orange">{{ bus_timetable.drive }} 分</td>
+                                    <td>{{ bus_timetable.IVRNO }}</td>
+                                    <td>{{ bus_timetable.StopName }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="layui-bg-red">即將進站</td>
+                                    <td>{{ bus_timetable.IVRNO }}</td>
+                                    <td>{{ bus_timetable.StopName }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    <colgroup>
+                    <col width="500">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                        <th lay-data="{field:'ComeTime'}">到站時間</th>
+                        <th lay-data="{field:'IVRNO'}">站牌代碼</th>
+                        <th lay-data="{field:'StopName'}">公車站名</th>
+                        </tr> 
+                    </thead>
+                    <!-- 回程:按照到站時間分顏色，小於4分鐘顯示即將進站 -->
+                    {% for bus_timetable in html_bus_timetable %}
+                        {% if bus_timetable.GoBack == 2 %}
+                        <tbody>
+                            {% if bus_timetable.drive == "末班離駛" %}
+                            <tr>
+                                <td>末班離駛</td>
+                                <td>{{ bus_timetable.IVRNO }}</td>
+                                <td>{{ bus_timetable.StopName }}</td>
+                            </tr>
+                            {% elif bus_timetable.drive >= 20%}
+                            <tr>
+                                <td class="layui-bg-cyan">{{ bus_timetable.ComeTime }}</td>
+                                <td>{{ bus_timetable.IVRNO }}</td>
+                                <td>{{ bus_timetable.StopName }}</td>
+                            </tr>
+                            {% elif bus_timetable.drive >= 15 %}
+                            <tr>
+                                <td class="layui-bg-green">{{ bus_timetable.drive }} 分</td>
+                                <td>{{ bus_timetable.IVRNO }}</td>
+                                <td>{{ bus_timetable.StopName }}</td>
+                            </tr>
+                            {% elif bus_timetable.drive >= 5 %}
+                            <tr>
+                                <td class="layui-bg-orange">{{ bus_timetable.drive }} 分</td>
+                                <td>{{ bus_timetable.IVRNO }}</td>
+                                <td>{{ bus_timetable.StopName }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td class="layui-bg-red">即將進站</td>
+                                <td>{{ bus_timetable.IVRNO }}</td>
+                                <td>{{ bus_timetable.StopName }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/layui.js" charset="utf-8"></script>
+    <script>
+        // 定時重新整理頁面的函式
+        function refreshPage() {
+        location.reload(); // 重新整理頁面
+        }
+
+        // 設定定時器，每隔一段時間重新整理頁面
+        setInterval(refreshPage, 30000); // 30000 毫秒 = 30 秒
+    </script>
+
+  </body>
+</html>

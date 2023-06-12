@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>會員頁面</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/css/layui.css">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+  </head>
+  <body>
+    <div style=" background-color: #33ABA1;">
+      <span style="color: #FFFFFF; margin-left: 10px; font-size: 17px;">
+        {{ html_nickname }}
+        <a href="/signout" style="color: #FFFFFF;">登出</a>
+        <a href="/myfavorite" style="color: #FFFFFF;">我的最愛</a>
+      </span>
+    </div>
+    <div style="width: 1500px;height: 500px;margin: 20px auto">
+      <form class="layui-form" action="/search">
+          <div class="layui-form-item">
+              <label class="layui-form-label">公車名稱</label>
+              <div class="layui-input-block">
+                  <input type="text" name="BusName" lay-verify="title" autocomplete="off" placeholder="請輸入公車名稱" class="layui-input">
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="formDemo">搜尋</button>
+            </div>
+          </div>
+      </form>
+    </div>
+
+  <script src="/static/layui.js" charset="utf-8"></script>
+
+
+
+  </body>
+</html>
